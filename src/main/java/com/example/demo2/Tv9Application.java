@@ -12,6 +12,6 @@ public class Tv9Application {
 
     public static void main(String[] args) {
         SpringApplication.run(Tv9Application.class, args);
-        //커밋이 안됨
     }
+    // commit test 2
 }
