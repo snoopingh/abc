@@ -15,6 +15,4 @@ public class GenericsInheritance2 {
     public static void main(String[] args) {
         List<?> list;   // ? : wildcards
     }
-
-    // 4회
 }
