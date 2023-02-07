@@ -8,6 +8,15 @@ import java.util.Iterator;
 public class Ob {
     // Iterable <---> Observable (duality)
     // Pull           Push
+
+    /*
+        event                       Iterable(pull)          Observable(push)
+
+        retrieve data               T next(void)            void notifyObservers(T)
+
+        complete check              hasNext                 setChanged
+     */
+
     public static void main(String[] args) {
         Iterable<Integer> iter = () -> new Iterator<Integer>() {
             int i = 0;
@@ -26,7 +35,7 @@ public class Ob {
             System.out.println(i);
         }
 
-        for (Iterator<Integer> it = iter.iterator(); it.hasNext();) {
+        for (Iterator<Integer> it = iter.iterator(); it.hasNext(); ) {
             System.out.println(it.next());
         }
     }

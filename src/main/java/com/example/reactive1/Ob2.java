@@ -9,6 +9,14 @@ public class Ob2 {
     // Iterable <---> Observable (duality)
     // Pull           Push
 
+    /*
+        event                       Iterable(pull)          Observable(push)
+
+        retrieve data               T next(void)            void notifyObservers(T)
+
+        complete check              hasNext                 setChanged
+     */
+
     static class IntObservable extends Observable implements Runnable {
         @Override
         public void run() {
