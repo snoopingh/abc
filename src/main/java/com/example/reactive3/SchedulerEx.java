@@ -5,6 +5,9 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Slf4j
 public class SchedulerEx {
     public static void main(String[] args) {
@@ -12,6 +15,7 @@ public class SchedulerEx {
             sub.onSubscribe(new Subscription() {
                 @Override
                 public void request(long n) {
+                    log.debug("request()");
                     sub.onNext(1);
                     sub.onNext(2);
                     sub.onNext(3);
@@ -27,7 +31,38 @@ public class SchedulerEx {
             });
         };
 
-        pub.subscribe(new Subscriber<Integer>() {
+//        Publisher<Integer> subOnPub = sub -> {
+//            ExecutorService es = Executors.newSingleThreadExecutor();
+//            es.execute(() -> pub.subscribe(sub));
+//        };
+
+        Publisher<Integer> pubOnPub = sub -> {
+            pub.subscribe(new Subscriber<Integer>() {
+                ExecutorService es = Executors.newSingleThreadExecutor();
+
+                @Override
+                public void onSubscribe(Subscription subscription) {
+                    sub.onSubscribe(subscription);
+                }
+
+                @Override
+                public void onNext(Integer integer) {
+                    es.execute(() -> sub.onNext(integer));
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+                    es.execute(() -> sub.onError(throwable));
+                }
+
+                @Override
+                public void onComplete() {
+                    es.execute(() -> sub.onComplete());
+                }
+            });
+        };
+
+        pubOnPub.subscribe(new Subscriber<Integer>() {
             @Override
             public void onSubscribe(Subscription s) {
                 log.debug("onSubscribe");
@@ -51,5 +86,7 @@ public class SchedulerEx {
         });
 
         System.out.println("exit");
+
+        // 47:00
     }
 }
