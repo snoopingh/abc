@@ -86,7 +86,5 @@ public class SchedulerEx {
         });
 
         System.out.println("exit");
-
-        // 47:00
     }
 }
